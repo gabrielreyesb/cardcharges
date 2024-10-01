@@ -172,7 +172,7 @@ class CardChargesController < ApplicationController
       @card_charges = @card_charges.where(card_id: selected_card_id) if selected_card_id.present? # Use @card_charges here
     
       @category_totals = @card_charges.joins('LEFT OUTER JOIN categories ON categories.id = card_charges.category_id')
-                                      .group("categories.name", "card_charges.date")
+                                      .group("categories.name")
                                       .sum(:amount)
     
       uncategorized_total = @card_charges.where(category_id: nil).sum(:amount)
