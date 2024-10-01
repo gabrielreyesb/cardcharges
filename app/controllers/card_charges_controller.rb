@@ -184,8 +184,11 @@ class CardChargesController < ApplicationController
       uncategorized_total = @card_charges.where(category_id: nil).sum(:amount)
       @category_totals["Sin categoría"] = uncategorized_total if uncategorized_total > 0
     
+      #@account_totals = @card_charges.group(:card_id)
+      #                           .pluck(:card_id, Arel.sql('SUM(amount) as total_amount'), Arel.sql('COUNT(*) as transaction_count'))
       @account_totals = @card_charges.group(:card_id)
-                                  .pluck(:card_id, Arel.sql('SUM(amount) as total_amount'), Arel.sql('COUNT(*) as transaction_count'))
+                                .order("card_charges.date") # Order before pluck
+                                .pluck(:card_id, Arel.sql('SUM(amount) as total_amount'), Arel.sql('COUNT(*) as transaction_count'))
     end
 
     private
