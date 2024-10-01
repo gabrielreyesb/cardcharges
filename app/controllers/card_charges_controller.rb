@@ -173,10 +173,13 @@ class CardChargesController < ApplicationController
     
       @card_charges = @card_charges.order(date: :asc)
     
-      @category_totals = @card_charges.joins(:category)
-                                  .where.not(categories: { name: nil })
-                                  .group("categories.name")
-                                  .sum(:amount)
+      #@category_totals = @card_charges.joins(:category)
+      #                            .where.not(categories: { name: nil })
+      #                            .group("categories.name")
+      #                            .sum(:amount)
+      @category_totals = @card_charges.joins('LEFT OUTER JOIN categories ON categories.id = card_charges.category_id')
+                                .group("categories.name", "card_charges.date")
+                                .sum(:amount)
     
       uncategorized_total = @card_charges.where(category_id: nil).sum(:amount)
       @category_totals["Sin categoría"] = uncategorized_total if uncategorized_total > 0
