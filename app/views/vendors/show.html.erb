@@ -1,0 +1,20 @@
+<div class="container mt-5"> 
+  <% if notice.present? %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <%= notice %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Proveedor</h5>
+      <p class="card-text"><strong>Name:</strong> <%= @vendor.name %></p>
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+      <%= link_to "Editar", edit_vendor_path(@vendor), class: "btn btn-secondary btn-sm" %>
+      <%= link_to "Regresar a proveedores", vendors_path, class: "btn btn-outline-secondary btn-sm" %>
+      <%= button_to "Borrar", @vendor, method: :delete, data: { confirm: "¿Estás seguro que quieres borrar al proveedor?" }, class: "btn btn-danger btn-sm" %>
+    </div>
+  </div>
+</div>

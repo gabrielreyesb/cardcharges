@@ -1,0 +1,54 @@
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Asignar categorias</h1>
+
+    <div class="text-center mt-4">
+      <%= link_to "Página principal", root_path, class: "btn btn-primary" %> 
+      <%= link_to "Categorias", categories_path, class: "btn btn-primary", target: "_blank" %> 
+      <%= link_to "Proveedores", vendors_path, class: "btn btn-primary", target: "_blank" %> 
+    </div>
+    <br> <hr>
+
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <%= form_with url: assign_categories_card_charges_path, method: :get do |f| %>
+          <div class="form-group">
+            <%= f.label :category_id, "Seleciona la categoría:" %>
+            <%= f.select :category_id, options_from_collection_for_select(Category.all, :id, :name, params[:category_id]), { include_blank: "Todas las categorías" }, class: "form-control" %>
+          </div>
+          <br>
+          <%= f.submit "Filtrar", class: "btn btn-primary" %>
+        <% end %>
+      </div>
+    </div>
+  
+    <br>
+  
+    <% if @card_charges.any? %>
+      <div class="text-center mt-3">
+        <h2>Cargos de la categoría <%= @selected_category&.name || "Todas" %></h2> 
+        <p>Total de cargos: <%= @card_charges.count %></p>
+      </div>
+  
+      <% @card_charges.each do |charge| %>
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="card mb-3">
+              <div class="card-body">
+                <p>Fecha: <%= charge.date.strftime("%d/%m/%Y") %></p>
+                <%= charge.description %> - $<%= charge.amount %>
+                <div class="mb-3">
+                  <%= form_with(model: charge, url: card_charge_path(charge), method: :patch) do |f| %>
+                    <br>
+                    <%= f.select :category_id, options_from_collection_for_select(Category.all, :id, :name, charge.category_id), { include_blank: "Sin categoría" }, class: "form-control" %> 
+                    <%= f.submit "Reclasificar", class: "btn btn-secondary" %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <p class="mt-6 text-center">Sin cargos por reclasificar</p> 
+    <% end %>
+  </div>

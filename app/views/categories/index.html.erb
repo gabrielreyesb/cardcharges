@@ -1,0 +1,45 @@
+<div class="container mt-5">
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top py-3">
+    <div class="container">
+      <div class="text-center mx-auto">
+        <%= link_to "Página principal", root_path, class: "btn btn-secondary me-2" %> 
+        <%= link_to "Agregar categoría", new_category_path, class: "btn btn-primary" %>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <h1 class="text-center mb-4 sticky-top bg-white pt-3">Categorías</h1>
+    <div style="overflow-y: auto; max-height: calc(100vh - 200px);">
+      <table class="table table-striped table-hover">
+          <thead>
+              <tr>
+                  <th>Nombre</th>
+                  <th class="text-center">Acciones</th>
+              </tr>
+          </thead>
+          <tbody>
+              <% @categories.each do |category| %>
+                  <tr>
+                      <td class="py-2"> <%= category.name %></td>
+                      <td class="text-center">
+                          <%= link_to "Ver", category, class: "btn btn-primary btn-sm me-2" %>
+                          <%= link_to "Editar", edit_category_path(category), class: "btn btn-secondary btn-sm me-2" %>
+                          <%= link_to "Borrar", category, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %>
+                      </td>
+                  </tr>
+              <% end %>
+          </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <nav aria-label="Category pagination"> 
+      <ul class="pagination justify-content-center">
+        <%= paginate @categories %> 
+      </ul>
+    </nav>
+  </div>
+</div>

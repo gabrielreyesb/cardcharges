@@ -1,0 +1,53 @@
+<h1>Cargos a tarjeta</h1>
+
+<div class="container">
+  <div class="text-center mx-auto">
+    <%= link_to "Página principal", root_path, class: "btn btn-primary me-2" %> 
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Fecha</th>
+      <th>Descripción</th>
+      <th>Cantidad</th>
+      <th>Tarjeta</th>
+    </tr>
+  </thead>
+  <hr>
+  <tbody>
+    <% @card_charges.each do |charge| %>
+      <tr>
+        <td><%= charge.date %></td>
+        <td><%= charge.description %></td>
+        <td><%= number_with_precision(charge.amount, precision: 2, delimiter: ',') %></td> 
+        <td><%#= charge.card.description %></td>
+      </tr>
+    <% end %>
+  
+    <table class="credit-card-charges-table">
+      <thead>
+      </thead>
+      <tbody>
+      </tbody>
+      <tfoot>
+        <tr class="totals-row">
+          <%#td colspan="2"><strong>Total cargos regulares:</strong> <%= number_with_precision(@cr_total, precision: 2, delimiter: ',') %></td>
+          <%#td><strong>Total MSI:</strong> <%= number_with_precision(@msi_total, precision: 2, delimiter: ',') %></td>
+          <%#td><strong>Total depósitos:</strong> <%= number_with_precision(@d_total, precision: 2, delimiter: ',') %></td>
+        </tr>
+        <hr>
+        <tr class="totals-row">
+          <td colspan="2">
+            <strong>Total cargos:</strong> <%= @card_charges.count %>
+          </td>
+          <td>
+            <%# strong>A pagar:</strong> <%= number_with_precision(@cr_total + @msi_total, precision: 2, delimiter: ',') %>
+          </td>
+          <td></td> 
+        </tr>
+      </tfoot>
+    </table>
+  </tbody>
+</table>

@@ -1,0 +1,29 @@
+<%= form_with(model: vendor, class: "row g-3") do |form| %>
+  <% if vendor.errors.any? %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <h2><%= pluralize(vendor.errors.count, "error") %> prohibited this category from being saved:</h2>
+      <ul>
+        <% vendor.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+
+  <div class="col-md-6 offset-md-3"> 
+    <%= form.label :name, class: "form-label" %> 
+    <%= form.text_field :name, class: "form-control" %>
+  </div>
+
+  <div class="col-md-6 offset-md-3"> 
+    <%= form.label :category_id, "Categoría", class: "form-label" %>
+    <%= form.collection_select :category_id, Category.all, :id, :name, {}, { class: "form-select" } %>
+  </div>
+
+  <div class="text-center mt-4">
+    <%= form.submit "Crear proveedor", class: "btn btn-primary" %> 
+    <%= link_to "Regresar a proveedores", vendors_path, class: "btn btn-secondary" %>
+    <%= link_to "Categorias", categories_path, class: "btn btn-primary", target: "_blank" %> 
+  </div>
+<% end %>
