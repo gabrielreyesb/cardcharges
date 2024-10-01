@@ -21,8 +21,8 @@
           <%= f.select :category_id, options_from_collection_for_select(Category.all, :id, :name, params[:category_id]), { include_blank: "Todas las categorías" }, class: "form-select" %>
         </div>
         <div class="col-md-6"> 
-          <%#= f.label :card_id, "Filtrar por tarjeta:", class: "form-label" %>
-          <%#= f.collection_select :card_id, Card.all, :id, :description, { include_blank: "Todas las tarjetas" }, class: "form-select" %>
+          <%= f.label :card_id, "Filtrar por tarjeta:", class: "form-label" %>
+          <%= f.collection_select :card_id, Card.all, :id, :name, { include_blank: "Todas las tarjetas" }, class: "form-select" %>
         </div>
         <div class="col-md-6"> </div>
         <div class="col-md-12 d-flex justify-content-center">

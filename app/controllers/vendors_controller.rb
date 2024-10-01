@@ -2,7 +2,17 @@ class VendorsController < ApplicationController
   before_action :set_vendor, only: %i[ show edit update destroy ]
 
   def index
-    @vendors = Vendor.includes(:category).page(params[:page])
+    @vendors = Vendor.all
+
+    if params[:category_id].present?
+      @vendors = @vendors.where(category_id: params[:category_id])
+    end
+
+    if params[:search].present?
+      @vendors = @vendors.where("name LIKE ?", "%#{params[:search]}%") 
+    end
+
+    @vendors = @vendors.page(params[:page])
   end
 
   # GET /vendors/1 or /vendors/1.json

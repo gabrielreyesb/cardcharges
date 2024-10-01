@@ -11,26 +11,41 @@
 
   <div class="container mt-5">
     <h1 class="text-center mb-4 sticky-top bg-white pt-3">Categorías</h1>
+
+    <div class="row justify-content-center mb-4"> <%# Added row for search form %>
+      <div class="col-md-6">
+        <%= form_with url: categories_path, method: :get do |f| %>
+          <div class="form-group mb-3"> <%# Added mb-3 for spacing %>
+            <%= f.label :search, "Buscar categoría:" %>
+            <%= f.text_field :search, value: params[:search], class: "form-control" %>
+          </div>
+          <div class="d-grid gap-2"> <%# Added this div to center the button %>
+            <%= f.submit "Buscar", class: "btn btn-primary" %> <%# Changed button label to "Buscar" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
     <div style="overflow-y: auto; max-height: calc(100vh - 200px);">
       <table class="table table-striped table-hover">
-          <thead>
-              <tr>
-                  <th>Nombre</th>
-                  <th class="text-center">Acciones</th>
-              </tr>
-          </thead>
-          <tbody>
-              <% @categories.each do |category| %>
-                  <tr>
-                      <td class="py-2"> <%= category.name %></td>
-                      <td class="text-center">
-                          <%= link_to "Ver", category, class: "btn btn-primary btn-sm me-2" %>
-                          <%= link_to "Editar", edit_category_path(category), class: "btn btn-secondary btn-sm me-2" %>
-                          <%= link_to "Borrar", category, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %>
-                      </td>
-                  </tr>
-              <% end %>
-          </tbody>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @categories.each do |category| %>
+            <tr>
+              <td class="py-2"><%= category.name %></td>
+              <td class="text-center">
+                <%= link_to "Ver", category, class: "btn btn-primary btn-sm me-2" %>
+                <%= link_to "Editar", edit_category_path(category), class: "btn btn-secondary btn-sm me-2" %>
+                <%= link_to "Borrar", category, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
       </table>
     </div>
   </div>
@@ -40,6 +55,6 @@
       <ul class="pagination justify-content-center">
         <%= paginate @categories %> 
       </ul>
-    </nav>
+    </ nav>
   </div>
 </div>
