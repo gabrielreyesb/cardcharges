@@ -161,7 +161,7 @@ class CardChargesController < ApplicationController
     end
 
     def monthly_report
-      @card_charges = CardCharge.positive_amounts 
+      @card_charges = CardCharge.positive_amounts
       start_date = params[:start_date]
       end_date = params[:end_date]
       selected_category_id = params[:category_id]
@@ -169,27 +169,20 @@ class CardChargesController < ApplicationController
     
       @card_charges = @card_charges.where(date: start_date..end_date) if start_date.present? && end_date.present?
       @card_charges = @card_charges.where(category_id: selected_category_id) if selected_category_id.present?
-      @charges = @charges.where(card_id: selected_card_id) if selected_card_id.present?
+      @card_charges = @card_charges.where(card_id: selected_card_id) if selected_card_id.present? # Use @card_charges here
     
-      @card_charges = @card_charges.order(date: :asc)
-    
-      #@category_totals = @card_charges.joins(:category)
-      #                            .where.not(categories: { name: nil })
-      #                            .group("categories.name")
-      #                            .sum(:amount)
       @category_totals = @card_charges.joins('LEFT OUTER JOIN categories ON categories.id = card_charges.category_id')
-                                .group("categories.name", "card_charges.date")
-                                .sum(:amount)
+                                      .group("categories.name", "card_charges.date")
+                                      .sum(:amount)
     
       uncategorized_total = @card_charges.where(category_id: nil).sum(:amount)
       @category_totals["Sin categoría"] = uncategorized_total if uncategorized_total > 0
     
-      #@account_totals = @card_charges.group(:card_id)
-      #                           .pluck(:card_id, Arel.sql('SUM(amount) as total_amount'), Arel.sql('COUNT(*) as transaction_count'))
-      @account_totals = @card_charges.group(:card_id)
-                                .order("card_charges.date") # Order before pluck
-                                .pluck(:card_id, Arel.sql('SUM(amount) as total_amount'), Arel.sql('COUNT(*) as transaction_count'))
-    end
+      @account_totals = @card_charges.group(:card_id, :date)
+                                      .pluck(:card_id, Arel.sql('SUM(amount) as total_amount'), Arel.sql('COUNT(*) as transaction_count'))
+    
+      @card_charges = @card_charges.order(date: :asc)
+    end    
 
     private
 
