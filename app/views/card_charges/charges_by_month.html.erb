@@ -1,0 +1,59 @@
+# In your view
+<div class="container mt-5">
+  <h1 class="text-center mb-4">Cargos por Mes y Categoría</h1>
+  <div class="text-center mt-4">
+    <%= link_to "Página principal", root_path, class: "btn btn-primary" %>
+  </div>
+  <br> <hr>
+
+  <%= form_with url: charges_by_month_card_charges_path, method: :get, class: "row g-3 mb-4" do |f| %>
+    <div class="col-md-6">
+      <%= f.label :start_date, "Fecha inicial:", class: "form-label" %>
+      <%= f.date_field :start_date, class: "form-control", value: @start_date %> 
+    </div>
+    <div class="col-md-6">
+      <%= f.label :end_date, "Fecha final:", class: "form-label" %>
+      <%= f.date_field :end_date, class: "form-control", value: @end_date %> 
+    </div>
+    <div class="col-md-12 d-flex justify-content-center">
+      <%= f.submit "Aplicar filtros", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+
+  <% if @charges_by_category_and_month.any? %>
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Categoría</th>
+          <% @charges_by_category_and_month.values.first.keys.each do |month| %>
+            <th><%= month.strftime("%B %Y") %></th>
+          <% end %>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @categories.each do |category| %>
+          <tr>
+            <td><%= category&.name || "Sin categoría" %></td>
+            <% @charges_by_category_and_month.values.first.keys.each do |month| %>
+              <td class="text-end"><%= number_to_currency(@charges_by_category_and_month[category][month] || 0) %></td>
+            <% end %>
+            <td class="text-end"><strong><%= number_to_currency(@charges_by_category_and_month[category].values.sum) %></strong></td>
+          </tr>
+        <% end %>
+        <tr> 
+            <td><strong>Totales mensuales</strong></td>
+            <% total_sum = 0 %>
+            <% @charges_by_category_and_month.values.first.keys.each do |month| %>
+                <% month_total = @card_charges.where("strftime('%Y-%m', date) = ?", month.strftime("%Y-%m")).sum(:amount) %>
+                <td class="text-end"><strong><%= number_to_currency(month_total) %></strong></td>
+                <% total_sum += month_total %>
+            <% end %>
+            <td class="text-end"><strong><%= number_to_currency(total_sum) %></strong></td>
+        </tr>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="mt-4 text-center">No se encontraron cargos para el período seleccionado.</p>
+  <% end %>
+</div>

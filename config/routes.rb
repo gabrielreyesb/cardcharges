@@ -15,5 +15,6 @@ Rails.application.routes.draw do
 
   get 'categorize_charges', to: 'card_charges#categorize_charges'
   get 'monthly_report', to: 'card_charges#monthly_report', as: 'monthly_report_card_charges'
+  get 'charges_by_month', to: 'card_charges#charges_by_month', as: 'charges_by_month_card_charges'
 
 end

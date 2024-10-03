@@ -1,18 +1,14 @@
 <div class="container mt-5">
   <h1 class="text-center mb-4">Estados de cuenta</h1>
-  <hr>
 
   <div class="row">
     <div class="col-md-12 mb-4">
       <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-          <h2 class="h4 mb-0">Seleccionar tarjeta</h2>
-        </div>
         <div class="card-body">
           <%= form_with url: card_charges_path, method: :post do |form| %>
             <div class="mb-3">
               <%= form.label :card_type, "Tarjeta", class: "form-label" %>
-              <%= select_tag :card_type, options_for_select([['Tarjeta de crédito BBVA', 'bbva_credit'], ['Tarjeta de débito BBVA', 'bbva_debit'], ['Tarjeta de crédito AMEX', 'amex_credit']]), prompt: "Seleccione una tarjeta", class: "form-select" %>
+              <%= select_tag :card_type, options_from_collection_for_select(Card.all, :id, :name, params[:card_type]), prompt: "Seleccione una tarjeta", class: "form-select" %> 
             </div>
             <div class="mb-3">
               <%= form.label :file, "Archivo", class: "form-label" %>
@@ -33,7 +29,9 @@
     <%= link_to "CRUD categorías", categories_path, class: "btn btn-primary" %> 
     <%= link_to "CRUD proveedores", vendors_path, class: "btn btn-primary" %>
     <%= link_to "CRUD tarjetas", cards_path, class: "btn btn-primary" %>
-    <%= link_to "Reporte cargos", monthly_report_card_charges_path, class: "btn btn-primary" %>
+    <hr>
+    <%= link_to "Reporte de cargos detallado", monthly_report_card_charges_path, class: "btn btn-primary" %>
+    <%= link_to "Reporte mensual por categoría", charges_by_month_card_charges_path, class: "btn btn-primary" %>
   </div>
 
 </div>

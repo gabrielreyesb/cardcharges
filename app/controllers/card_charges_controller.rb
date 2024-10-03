@@ -22,12 +22,12 @@ class CardChargesController < ApplicationController
       card_type = params[:card_type]
 
       case card_type
-        when 'bbva_credit'
-          process_bbva_credit(uploaded_file)
-        when 'bbva_debit'
-          process_bbva_debit(uploaded_file)
-        when 'amex_credit'
-          process_amex_credit(uploaded_file)
+        when '1'
+          process_bbva_credit(uploaded_file, card_type)
+        when '2'
+          process_bbva_debit(uploaded_file, card_type)
+        when '3'
+          process_amex_credit(uploaded_file, card_type)
         else
           redirect_to card_charges_path, alert: 'Tipo de tarjeta no válido.'
           return
@@ -50,8 +50,7 @@ class CardChargesController < ApplicationController
       redirect_to assign_categories_card_charges_path(month: params[:month])
     end
 
-    def process_bbva_credit(uploaded_file)
-      Rails.logger.error "Procesando archivo BBVA crédito"
+    def process_bbva_credit(uploaded_file, card_type)
       pattern = /\A\d+ DE \d+ .+\z/
       xlsx = Roo::Spreadsheet.open(uploaded_file.path)
       header_rows_to_skip = 0
@@ -77,7 +76,7 @@ class CardChargesController < ApplicationController
             description: description, 
             amount: amount,
             #type_of_charge: type_of_charge, 
-            card_id: 1 
+            card_id: card_type
           )
     
           if card_charge.save
@@ -91,12 +90,12 @@ class CardChargesController < ApplicationController
       end
     end
     
-    def process_bbva_debit(uploaded_file)
+    def process_bbva_debit(uploaded_file, card_type)
       # Implement the logic for processing Card B here
       # Similar to process_card_a, but tailored for Card B's specific format
     end
 
-    def process_amex_credit(uploaded_file)
+    def process_amex_credit(uploaded_file, card_type)
       pattern = /\A\d+ DE \d+ .+\z/
       xlsx = Roo::Spreadsheet.open(uploaded_file.path)
       header_rows_to_skip = 7
@@ -120,7 +119,7 @@ class CardChargesController < ApplicationController
             description: description, 
             amount: amount, 
             type_of_charge: type_of_charge, 
-            card_id: 2
+            card_id: card_type
           ) 
           unless charge.valid?
             Rails.logger.error "Charge creation failed: #{charge.errors.full_messages.join(', ')}"
@@ -183,6 +182,16 @@ class CardChargesController < ApplicationController
     
       @card_charges = @card_charges.order(date: :asc)
     end    
+    
+    def charges_by_month
+      @start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : Date.today.beginning_of_year
+      @end_date = params[:end_date].present? ? Date.parse(params[:end_date]) : Date.today.end_of_year
+      @card_charges = CardCharge.includes(:category).where(date: @start_date..@end_date).where('amount > 0') 
+      @categories = @card_charges.map(&:category).uniq
+      @charges_by_category_and_month = @card_charges.group_by(&:category)
+                                                .transform_values { |charges| charges.group_by { |charge| charge.date.beginning_of_month }.transform_values { |charges| charges.sum(&:amount) } }
+                                                .transform_values { |months| months.sort_by { |month, _| month }.to_h } 
+    end
 
     private
 
