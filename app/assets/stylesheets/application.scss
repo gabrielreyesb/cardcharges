@@ -1,1 +1,12 @@
 @import "bootstrap";
+
+@media (max-width: 768px) { 
+    .button-container {
+        flex-direction: column; /* Stack buttons vertically */
+        align-items: center; 
+    }
+    .button {
+        width: 90%; /* Make buttons wider */
+        margin-bottom: 10px; 
+    }
+}
