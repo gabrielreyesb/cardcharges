@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
+  devise_for :users
   resources :cards
   resources :vendors
   resources :categories
+  
   root 'card_charges#home'
 
   resources :card_charges do

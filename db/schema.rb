@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_01_020235) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_15_215802) do
   create_table "card_charges", force: :cascade do |t|
     t.string "description"
     t.decimal "amount"
@@ -43,6 +43,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_01_020235) do
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_categorizations_on_category_id"
     t.index ["vendor_id"], name: "index_categorizations_on_vendor_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   create_table "vendors", force: :cascade do |t|

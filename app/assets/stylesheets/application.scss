@@ -10,3 +10,19 @@
         margin-bottom: 10px; 
     }
 }
+
+.user-info {
+    text-align: right; /* Or left, or center */
+    margin-bottom: 20px; 
+    font-size: 14px;
+    color: #333; /* Example color */
+  }
+  
+  .user-info a {
+    color: #007bff; /* Example link color */
+    text-decoration: none;
+  }
+  
+  .user-info strong { 
+    font-weight: bold; 
+  }

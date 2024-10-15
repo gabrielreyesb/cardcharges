@@ -16,6 +16,7 @@ gem "sassc-rails"
 gem 'roo'
 gem 'kaminari'
 gem 'pg'
+gem 'devise', '~> 4.8'
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ]
