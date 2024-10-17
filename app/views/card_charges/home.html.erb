@@ -32,6 +32,10 @@
     <hr>
     <%= link_to "Reporte de cargos detallado", monthly_report_card_charges_path, class: "btn btn-primary" %>
     <%= link_to "Reporte mensual por categoría", charges_by_month_card_charges_path, class: "btn btn-primary" %>
+    <hr>
+    <% if user_signed_in? %> <div class="text-center mb-4">
+      <%= button_to 'Cerrar sesión', destroy_user_session_path, method: :delete, class: "btn btn-primary" %>
+    <% end %>
   </div>
 
 </div>

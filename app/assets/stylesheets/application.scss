@@ -1,28 +1,43 @@
 @import "bootstrap";
 
-@media (max-width: 768px) { 
-    .button-container {
-        flex-direction: column; /* Stack buttons vertically */
-        align-items: center; 
-    }
-    .button {
-        width: 90%; /* Make buttons wider */
-        margin-bottom: 10px; 
-    }
-}
+.login-form {
+  @extend .card; // Use Bootstrap's card styling
+  @extend .shadow; // Add a shadow
+  width: 40%;
+  margin: 30px auto; // Center the card with top/bottom margin
 
-.user-info {
-    text-align: right; /* Or left, or center */
-    margin-bottom: 20px; 
-    font-size: 14px;
-    color: #333; /* Example color */
+  h2 { 
+    @extend .card-header; // Use card-header styling for the title
+    text-align: center; 
   }
-  
-  .user-info a {
-    color: #007bff; /* Example link color */
-    text-decoration: none;
+
+  .card-body { // Target the card-body
+    @extend .p-4; // Add padding
+
+    .field {
+      margin-bottom: 1rem; // Add spacing between fields
+
+      .form-label {
+        @extend .fw-bold; // Use Bootstrap's bold text utility
+      }
+
+      .form-input {
+        @extend .form-control; // Use Bootstrap's form control styling
+      }
+    }
+
+    .actions {
+      text-align: center; // Center the login button
+    }
+
+    .shared-links {
+      @extend .mt-3; // Add margin to the top
+      text-align: center;
+
+      a {
+        @extend .text-decoration-none; // Remove link underlines (optional)
+        margin: 0 0.5rem; // Add space between links
+      }
+    }
   }
-  
-  .user-info strong { 
-    font-weight: bold; 
-  }
+}
