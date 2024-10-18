@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_15_215802) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_17_005434) do
   create_table "card_charges", force: :cascade do |t|
     t.string "description"
     t.decimal "amount"
@@ -19,8 +19,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_15_215802) do
     t.datetime "updated_at", null: false
     t.integer "category_id"
     t.integer "card_id"
+    t.integer "user_id", null: false
     t.index ["card_id"], name: "index_card_charges_on_card_id"
     t.index ["category_id"], name: "index_card_charges_on_category_id"
+    t.index ["user_id"], name: "index_card_charges_on_user_id"
   end
 
   create_table "cards", force: :cascade do |t|
@@ -67,6 +69,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_15_215802) do
 
   add_foreign_key "card_charges", "cards"
   add_foreign_key "card_charges", "categories"
+  add_foreign_key "card_charges", "users"
   add_foreign_key "categorizations", "categories"
   add_foreign_key "categorizations", "vendors"
   add_foreign_key "vendors", "categories"

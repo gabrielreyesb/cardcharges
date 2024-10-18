@@ -1,13 +1,9 @@
 class CardChargesController < ApplicationController
-
-    def home
-    end
+    before_action :authenticate_user! 
 
     def index
       selected_card_id = params[:card_id]
-
-      @card_charges = CardCharge.all
-      @card_charges = @card_charges.order(date: :asc)      
+      @card_charges = current_user.card_charges.order(date: :asc)
 
       #@cr_total = @card_charges.where(type_of_charge: "Cargo regular").sum(:amount)
       #@msi_total = @card_charges.where(type_of_charge: "Cargo MSI").sum(:amount)
@@ -76,8 +72,8 @@ class CardChargesController < ApplicationController
             date: date, 
             description: description, 
             amount: amount,
-            #type_of_charge: type_of_charge, 
-            card_id: card_type
+            card_id: card_type,
+            user: current_user
           )
     
           if card_charge.save
@@ -120,7 +116,8 @@ class CardChargesController < ApplicationController
             description: description, 
             amount: amount, 
             type_of_charge: type_of_charge, 
-            card_id: card_type
+            card_id: card_type,
+            user: current_user
           ) 
           unless charge.valid?
             Rails.logger.error "Charge creation failed: #{charge.errors.full_messages.join(', ')}"
@@ -133,7 +130,7 @@ class CardChargesController < ApplicationController
 
     def assign_categories
       @selected_category_id = params[:category_id]
-      @card_charges = CardCharge.all
+      @card_charges = current_user.card_charges
 
       if @selected_category_id.present? && @selected_category_id != ""
         @card_charges = @card_charges.where(category_id: @selected_category_id)
@@ -146,7 +143,7 @@ class CardChargesController < ApplicationController
     end
 
     def categorize_charges
-      uncategorized_charges = CardCharge.where(category_id: nil)
+      uncategorized_charges = current_user.card_charges.where(category_id: nil)
       vendors = Vendor.all
     
       uncategorized_charges.each do |charge|
@@ -161,7 +158,7 @@ class CardChargesController < ApplicationController
     end
 
     def monthly_report
-      @card_charges = CardCharge.positive_amounts
+      @card_charges = current_user.card_charges.positive_amounts
       start_date = params[:start_date]
       end_date = params[:end_date]
       selected_category_id = params[:category_id]
@@ -187,7 +184,9 @@ class CardChargesController < ApplicationController
     def charges_by_month
       @start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : Date.today.beginning_of_year
       @end_date = params[:end_date].present? ? Date.parse(params[:end_date]) : Date.today.end_of_year
-      @card_charges = CardCharge.includes(:category).where(date: @start_date..@end_date).where('amount > 0') 
+    
+      @card_charges = current_user.card_charges.includes(:category).where(date: @start_date..@end_date).where('amount > 0') 
+
       @categories = @card_charges.map(&:category).uniq
       @charges_by_category_and_month = @card_charges.group_by(&:category)
                                                 .transform_values { |charges| charges.group_by { |charge| charge.date.beginning_of_month }.transform_values { |charges| charges.sum(&:amount) } }

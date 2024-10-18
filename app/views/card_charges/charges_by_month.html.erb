@@ -45,11 +45,12 @@
             <% total_sum = 0 %>
             <% @charges_by_category_and_month.values.first.keys.each do |month| %>
                 
-                <%# Para Sqlite, local %>
-                <%# month_total = @card_charges.where("strftime('%Y-%m', date) = ?", month.strftime("%Y-%m")).sum(:amount) %>
-                
-                <%# Para Postgress, Heroku %>
-                <% month_total = @card_charges.where("to_char(date, 'YYYY-MM') = ?", month.strftime("%Y-%m")).sum(:amount) %>
+              <% month_total = current_user.card_charges.where(
+                CardCharge.connection.adapter_name == 'SQLite' ? 
+                  "strftime('%Y-%m', date) = ?" : 
+                  "to_char(date, 'YYYY-MM') = ?",
+                month.strftime("%Y-%m")
+              ).sum(:amount) %>
                 
                 <td class="text-end"><strong><%= number_to_currency(month_total) %></strong></td>
                 <% total_sum += month_total %>
